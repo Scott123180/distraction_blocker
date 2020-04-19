@@ -1,17 +1,19 @@
+function removeElement(elementToRemove){
+    elementToRemove.parentNode.removeChild(elementToRemove);
+}
+
 function removeById(id){
     const elementToRemove = document.getElementById(id);
     elementToRemove.parentNode.removeChild(elementToRemove);
 }
 
 const youtube = () => {
-    console.log("hello from youtube")
     removeById("primary");
 }
 
 const facebook = () => {
-    console.log("hello from facebook")
     const elementToRemove = document.querySelector("div[role='main']")
-    console.log(elementToRemove);
+    removeElement(elementToRemove);
 } 
 
 let pageMap = new Map();
