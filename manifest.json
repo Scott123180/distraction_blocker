@@ -10,7 +10,14 @@
     "permissions": ["activeTab", "tabs"],
     "content_scripts": [
         {
-          "matches": ["<all_urls>"],
+          "matches": [
+            "*://*.youtube.com/*", 
+            "*://*.facebook.com/*",
+            "*://*.reddit.com/*",
+            "*://*.imgur.com/*",
+            "*://*.tiktok.com/*",
+            "*://*.instagram.com/*"
+          ],
           "js": ["sites/youtube.js","content.js"],
           "run_at": "document_idle"
         }
