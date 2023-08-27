@@ -27,7 +27,7 @@ const instagram = () => {
 let pageMap = new Map();
 pageMap.set("www.youtube.com", blockYouTubeRecommendations);
 pageMap.set("www.facebook.com", facebook);
-pageMap.set("www.reddit.com", removeBody);
+//pageMap.set("www.reddit.com", removeBody);
 pageMap.set("imgur.com", removeBody);
 pageMap.set("www.tiktok.com", removeBody)
 pageMap.set("instagram.com", instagram);
