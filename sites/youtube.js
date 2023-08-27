@@ -1,25 +1,59 @@
 const blockYouTubeRecommendations = () => {
-    //contains all the url info - we can tell what page people are on and determine what to block 
-    // from there
-    const href = window.location.href;
 
+  const currentPage = parsePage();
 
-    // Block the main homepage feed
-    let homeFeed = document.querySelector("ytd-browse");
-    if (homeFeed) {
-      homeFeed.remove();
+  switch (currentPage) {
+    case "homePage": {
+      blockHomePage();
     }
-    let primary = document.getElementById("primary")
-    if(primary) {
-        primary.remove();
+    case "watchPage": {
+      blockWatchPage();
     }
-  
-    // Block the sidebar recommendations
-    let recommendedSidebar = document.querySelectorAll("ytd-watch-next-secondary-results-renderer");
-    if (recommendedSidebar.length > 0) {
-      recommendedSidebar.forEach(element => {
-        element.remove();
-      });
+    case "shortsPage": {
+      blockShortsPage();
     }
-  };
-  
+    default: {
+      return;
+    }
+  }
+};
+
+const blockShortsPage = () => {
+  //offline container
+  removeElementIfExists(document.getElementById("offline-container"));
+
+  //shorts container
+  removeElementIfExists(document.getElementById("shorts-container"));
+}
+
+const blockWatchPage = () => {
+  //recommended video sidbar
+  removeElementIfExists(document.getElementById("secondary"));
+
+  //after video recommendations
+  removeElementIfExists(document.querySelector("div.ytp-endscreen-content"));
+}
+
+const blockHomePage = () => {
+  //homepage recommended videos
+  removeElementIfExists(document.getElementById("primary"));
+}
+
+const removeElementIfExists = (element) => {
+  if (element) {
+    element.remove();
+  }
+}
+
+const parsePage = () => {
+  const href = window.location.href;
+
+  if (href === 'https://www.youtube.com/') {
+    return "homePage";
+  }
+  else if (href.includes("watch")) {
+    return "watchPage";
+  } else if (href.includes("shorts")) {
+    return "shortsPage";
+  }
+}
