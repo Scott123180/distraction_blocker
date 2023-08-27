@@ -1,4 +1,3 @@
-
 function removeElement(elementToRemove){
     elementToRemove.parentNode.removeChild(elementToRemove);
 }
@@ -9,7 +8,11 @@ function removeById(id){
 }
 
 const youtube = () => {
-    removeById("primary");
+    // Initial check
+    blockYouTubeRecommendations();
+
+    // // Check repeatedly as YouTube is a single-page application and content might get loaded dynamically
+    setInterval(blockYouTubeRecommendations, 1000);
 }
 
 const facebook = () => {
@@ -42,8 +45,12 @@ pageMap.set("https://www.instagram.com/", instagram);
 pageMap.set("https://www.instagram.com/explore/", instagram);
 
 
-const myLocation = window.location.href;
+const myLocation = window.location.host;
+console.log("location!")
 console.log(myLocation);
 
 const filterFunction = pageMap.get(myLocation);
-filterFunction();
+
+if(filterFunction){
+    filterFunction();
+}
