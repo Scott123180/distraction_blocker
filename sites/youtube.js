@@ -1,6 +1,7 @@
 const blockYouTubeRecommendations = () => {
 
   const currentPage = parsePage();
+  blockSidebar();
 
   switch (currentPage) {
     case "homePage": {
@@ -12,22 +13,30 @@ const blockYouTubeRecommendations = () => {
     case "shortsPage": {
       blockShortsPage();
     }
+    case "subscriptionsPage": {
+      blockSubscriptionsPage();
+    }
     default: {
       return;
     }
   }
 };
 
-const blockShortsPage = () => {
-  //offline container
-  removeElementIfExists(document.getElementById("offline-container"));
+const blockSidebar = () => {
+  removeElementIfExists(document.getElementById("guide-inner-content"));
+}
 
-  //shorts container
+const blockSubscriptionsPage = () => {
+  removeElementIfExists(document.getElementById("primary"))
+}
+
+const blockShortsPage = () => {
+  removeElementIfExists(document.getElementById("offline-container"));
   removeElementIfExists(document.getElementById("shorts-container"));
 }
 
 const blockWatchPage = () => {
-  //recommended video sidbar
+  //recommended video sidebar
   removeElementIfExists(document.getElementById("secondary"));
 
   //after video recommendations
@@ -55,5 +64,8 @@ const parsePage = () => {
     return "watchPage";
   } else if (href.includes("shorts")) {
     return "shortsPage";
+  } else if(href.includes("subscriptions")){
+    return "subscriptionsPage";
+
   }
 }
