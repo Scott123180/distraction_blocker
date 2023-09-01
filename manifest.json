@@ -7,7 +7,7 @@
       "64": "icons/icon64.png",
       "128": "icons/icon128.png"
     },
-    "permissions": ["activeTab", "tabs"],
+    "permissions": ["activeTab", "tabs", "storage"],
     "content_scripts": [
         {
           "matches": [
@@ -22,5 +22,7 @@
           "run_at": "document_idle"
         }
       ],
-    "manifest_version": 3
+    "manifest_version": 3,
+    "options_page": "options.html",
+    "homepage_url": "https://github.com/Scott123180/distraction_blocker"
   }

@@ -28,19 +28,36 @@ const instagram = () => {
 let pageMap = new Map();
 pageMap.set("www.youtube.com", blockYouTubeRecommendations);
 pageMap.set("www.facebook.com", facebook);
-//pageMap.set("www.reddit.com", removeBody);
+pageMap.set("www.reddit.com", removeBody);
 pageMap.set("imgur.com", removeBody);
 pageMap.set("www.tiktok.com", removeBody)
 pageMap.set("instagram.com", instagram);
+
+let blockConfigMap = new Map();
+blockConfigMap.set("www.youtube.com", "blockYoutube");
+blockConfigMap.set("www.facebook.com", "blockFacebook");
+blockConfigMap.set("www.reddit.com", "blockReddit");
+blockConfigMap.set("imgur.com", "blockImgur");
+blockConfigMap.set("www.tiktok.com", "blockTikTok")
+blockConfigMap.set("instagram.com", "blockInstagram");
+//twitter
+//zillow
+//news sites
 
 const myLocation = window.location.host;
 console.log(myLocation);
 
 const blockFunction = pageMap.get(myLocation);
+const blockConfig = blockConfigMap.get(myLocation);
 
-if (blockFunction) {
-    blockFunction();
+if(blockFunction){
+    chrome.storage.sync.get(blockConfig, function(data) {
+        if (data[blockConfig]) {
+                blockFunction();
 
-    // Check repeatedly as many applications are single page and load dynamically
-    setInterval(blockFunction, 1000);
-}
+                // Check repeatedly as many applications are single page and load dynamically
+                setInterval(blockFunction, 1000);
+            }
+        }
+    )
+};
