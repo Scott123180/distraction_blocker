@@ -7,7 +7,7 @@
       "64": "icons/icon64.png",
       "128": "icons/icon128.png"
     },
-    "permissions": ["activeTab", "tabs", "storage"],
+    "permissions": ["activeTab","storage"],
     "content_scripts": [
         {
           "matches": [
