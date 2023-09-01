@@ -1,5 +1,5 @@
 const CONFIGS = [
-    { id: "blockYoutube", label: "Block Youtube (beta)" },
+    { id: "blockYoutube", label: "Youtube (beta)" },
     { id: "blockFacebook", label: "Facebook (alpha)" },
     { id: "blockReddit", label: "Reddit (alpha)" },
     { id: "blockImgur", label: "Imgur (alpha)" },
