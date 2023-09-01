@@ -1,20 +1,24 @@
 const blockYouTubeRecommendations = () => {
 
   const currentPage = parsePage();
-  blockSidebar();
+  blockSiteSidebar();
 
   switch (currentPage) {
     case "homePage": {
       blockHomePage();
+      return;
     }
     case "watchPage": {
       blockWatchPage();
+      return;
     }
     case "shortsPage": {
       blockShortsPage();
+      return;
     }
     case "subscriptionsPage": {
       blockSubscriptionsPage();
+      return;
     }
     default: {
       return;
@@ -22,7 +26,7 @@ const blockYouTubeRecommendations = () => {
   }
 };
 
-const blockSidebar = () => {
+const blockSiteSidebar = () => {
   removeElementIfExists(document.getElementById("guide-inner-content"));
 }
 
@@ -37,7 +41,7 @@ const blockShortsPage = () => {
 
 const blockWatchPage = () => {
   //recommended video sidebar
-  removeElementIfExists(document.getElementById("secondary"));
+  removeElementIfExists(document.getElementById("secondary-inner"));
 
   //after video recommendations
   removeElementIfExists(document.querySelector("div.ytp-endscreen-content"));
@@ -45,7 +49,7 @@ const blockWatchPage = () => {
 
 const blockHomePage = () => {
   //homepage recommended videos
-  removeElementIfExists(document.getElementById("primary"));
+  removeElementIfExists(document.querySelector('ytd-rich-grid-renderer'));
 }
 
 const removeElementIfExists = (element) => {
