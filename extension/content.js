@@ -32,6 +32,7 @@ pageMap.set("www.reddit.com", removeBody);
 pageMap.set("imgur.com", removeBody);
 pageMap.set("www.tiktok.com", removeBody)
 pageMap.set("instagram.com", instagram);
+pageMap.set("weather.com", blockWeatherRecommendations);
 
 let blockConfigMap = new Map();
 blockConfigMap.set("www.youtube.com", "blockYoutube");
@@ -40,6 +41,7 @@ blockConfigMap.set("www.reddit.com", "blockReddit");
 blockConfigMap.set("imgur.com", "blockImgur");
 blockConfigMap.set("www.tiktok.com", "blockTikTok")
 blockConfigMap.set("instagram.com", "blockInstagram");
+blockConfigMap.set("weather.com", "blockWeather");
 //twitter
 //zillow
 //news sites
@@ -53,6 +55,7 @@ const blockConfig = blockConfigMap.get(myLocation);
 if(blockFunction){
     chrome.storage.sync.get(blockConfig, function(data) {
         if (data[blockConfig]) {
+
                 blockFunction();
 
                 // Check repeatedly as many applications are single page and load dynamically

@@ -5,13 +5,14 @@ const CONFIGS = [
     { id: "blockImgur", label: "Imgur (alpha)" },
     { id: "blockTikTok", label: "TikTok (alpha)" },
     { id: "blockInstagram", label: "Instagram (alpha)" },
+    { id: "blockWeather", label: "Weather.com (alpha)" },
 ];
 
 document.addEventListener('DOMContentLoaded', function () {
+    generateCheckboxes();
+
     // Restore saved checkbox states, or set to default
     restoreOptions();
-
-    generateCheckboxes();
 
     attachEventListeners();
 });
@@ -45,18 +46,36 @@ function saveOptions() {
     chrome.storage.sync.set(settings);
 }
 
+// function restoreOptions() {
+//     chrome.storage.sync.get(null, function(data) {
+//         CONFIGS.forEach(config => {
+//             let checkbox = document.getElementById(config.id);
+
+//             // If setting exists, set checkbox, else default to unchecked
+//             if (checkbox) {
+//                 checkbox.checked = data[config.id] || false;
+//             }
+//         });
+//     });
+// }
+
 function restoreOptions() {
     chrome.storage.sync.get(null, function(data) {
         CONFIGS.forEach(config => {
             let checkbox = document.getElementById(config.id);
-
-            // If setting exists, set checkbox, else default to unchecked
             if (checkbox) {
-                checkbox.checked = data[config.id] || false;
+                // If the config setting exists in storage, use that, else default to unchecked
+                if (data.hasOwnProperty(config.id)) {
+                    checkbox.checked = data[config.id];
+                } else {
+                    checkbox.checked = false;
+                    saveOptions();  // Save this default value to storage
+                }
             }
         });
     });
 }
+
 
 
 function attachEventListeners() {
