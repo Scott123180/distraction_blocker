@@ -41,7 +41,7 @@ const blockShortsPage = () => {
 
 const blockWatchPage = () => {
   //recommended video sidebar
-  removeElementIfExists(document.getElementById("secondary-inner"));
+  removeElementIfExists(document.getElementById("related"));
 
   //after video recommendations
   removeElementIfExists(document.querySelector("div.ytp-endscreen-content"));
