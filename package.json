@@ -1,0 +1,17 @@
+{
+  "name": "distraction_blocker",
+  "description": "Dev tooling for the Distraction Blocker Chrome extension. The extension itself lives in extension/ and has no npm dependencies.",
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/check_selectors.mjs",
+    "package": "node scripts/package.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Scott123180/distraction_blocker.git"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "playwright": "^1.61.1"
+  }
+}

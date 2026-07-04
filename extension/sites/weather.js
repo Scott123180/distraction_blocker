@@ -1,38 +1,17 @@
 const blockWeatherRecommendations = () => {
+    // Right-side sidebar column
+    removeElementIfExists(document.querySelector('div[style="grid-area: sidebar;"]'));
 
-    removeElementIfExists(document.querySelector(".region-sidebar"))
+    // Bottom content area (Taboola feed)
+    removeElementIfExists(document.querySelector('div[style="grid-area: contentBottom;"]'));
 
-    removeNonAlertMessagingFromCurrentConditionsCard();
-
-    removeContentMedia();
-
-}
-
-const removeContentMedia = () => {
-
-    const contentArray = elementIdContains("div", "WxuContentMedia-main");
-    contentArray.forEach(c => c.remove());
-}
-
-const removeNonAlertMessagingFromCurrentConditionsCard = () => {
-    const matchedDiv = elementClassnameContains("div", "CurrentConditions--messaging")[0];
-
-    if(matchedDiv){
-        const weatherAlert = elementClassnameContains("a", "AlertHeadline--AlertHeadline")[0]
-        if(!weatherAlert) {
-            matchedDiv.remove();
+    // Ad unit containers (WX_* slots)
+    document.querySelectorAll('[data-testid$="-container"]').forEach(el => {
+        if (el.dataset.testid && el.dataset.testid.startsWith('WX_')) {
+            el.remove();
         }
-    }
-}
+    });
 
-function elementClassnameContains(selector, text) {
-    let elements = document.querySelectorAll(selector);
-
-    return Array.from(elements).filter(element => element.className.includes(text));
-}
-
-function elementIdContains(selector, text) {
-    let elements = document.querySelectorAll(selector);
-
-    return Array.from(elements).filter(element => element.id.includes(text));
+    // Taboola recommendation feed
+    document.querySelectorAll('[id^="taboola"]').forEach(el => el.remove());
 }

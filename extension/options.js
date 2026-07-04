@@ -1,5 +1,5 @@
 const CONFIGS = [
-    { id: "blockYoutube", label: "Youtube (beta)" },
+    { id: "blockYoutube", label: "Youtube (beta)", default: true },
     { id: "blockFacebook", label: "Facebook (alpha)" },
     { id: "blockReddit", label: "Reddit (alpha)" },
     { id: "blockImgur", label: "Imgur (alpha)" },
@@ -64,12 +64,11 @@ function restoreOptions() {
         CONFIGS.forEach(config => {
             let checkbox = document.getElementById(config.id);
             if (checkbox) {
-                // If the config setting exists in storage, use that, else default to unchecked
                 if (data.hasOwnProperty(config.id)) {
                     checkbox.checked = data[config.id];
                 } else {
-                    checkbox.checked = false;
-                    saveOptions();  // Save this default value to storage
+                    checkbox.checked = config.default || false;
+                    saveOptions();
                 }
             }
         });
