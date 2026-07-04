@@ -45,6 +45,7 @@ const blockWatchPage = () => {
 
   //after video recommendations
   removeElementIfExists(document.querySelector("div.ytp-endscreen-content"));
+  removeElementIfExists(document.querySelector("div.ytp-fullscreen-grid-stills-container"));
 }
 
 const blockHomePage = () => {
