@@ -4,33 +4,48 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Chrome/Chromium browser extension (Manifest V3) that blocks distracting recommended content on social media and news sites. It does not block access to the sites themselves — it removes specific DOM elements like recommendation feeds, sidebars, and autoplay content.
+This is a cross-browser extension (Manifest V3) for Chrome/Chromium and Firefox that blocks distracting recommended content on social media and news sites. It does not block access to the sites themselves — it removes specific DOM elements like recommendation feeds, sidebars, and autoplay content.
 
 ## Project Structure
 
 ```
-extension/   ← the Chrome extension; this directory is what gets zipped and uploaded
-scripts/     ← dev/selector-checking scripts (tracked in git, never packaged)
+src/         ← shared extension source (JS, HTML, icons) used by every browser
+manifests/   ← base.json (shared) + chrome.json / firefox.json (per-browser overrides)
+scripts/     ← build/package + selector-checking scripts (tracked in git, never packaged)
+dist/        ← build output (gitignored): dist/chrome/, dist/firefox/, and release ZIPs
 package.json ← devDependencies only (Playwright); the extension has no npm deps
 ```
 
 To install dev tools: `npm install`
 
+## Building
+
+The build is a plain copy plus manifest merge — no bundling or transpiling:
+`scripts/build.mjs` copies `src/` to `dist/<browser>/` and writes `manifest.json` by
+deep-merging `manifests/base.json` with `manifests/<browser>.json` (browser keys win).
+
+- `npm run build` (or `build:chrome` / `build:firefox`) → `dist/<browser>/`
+- `npm run package` (or `package:chrome` / `package:firefox`) → `dist/distraction_blocker_<browser>_v<version>.zip`
+
+Re-run the build after editing anything in `src/` or `manifests/`. Never edit files in `dist/`.
+
+Shared manifest fields (version, content scripts, match patterns) go in `manifests/base.json`.
+Only put genuinely browser-specific keys in the per-browser files: Chrome uses `options_page`;
+Firefox uses `options_ui` and `browser_specific_settings.gecko` (add-on ID, min version,
+`data_collection_permissions`). The code uses the `chrome.*` namespace, which Firefox also supports
+for MV3, so no polyfill is needed — keep it that way unless a Firefox-only API is required.
+
 ## Loading the Extension
 
-There is no build step. Load the extension directly from the `extension/` directory:
-1. Go to `chrome://extensions/`
-2. Enable "Developer mode"
-3. Click "Load unpacked" and select the `extension/` folder
-
-When packaging for the Chrome Web Store, zip only the contents of `extension/`.
+- **Chrome:** `chrome://extensions/` → enable Developer mode → "Load unpacked" → select `dist/chrome/`
+- **Firefox:** `about:debugging#/runtime/this-firefox` → "Load Temporary Add-on…" → select `dist/firefox/manifest.json`
 
 ## Architecture
 
 ### Execution Flow
 
-1. `manifest.json` injects `sites/youtube.js`, `sites/weather.js`, and `content.js` at `document_idle` on matched URLs.
-2. Site-specific files (in `extension/sites/`) define blocking functions in global scope before `content.js` runs.
+1. The built `manifest.json` (from `manifests/base.json`) injects `sites/youtube.js`, `sites/weather.js`, and `content.js` at `document_idle` on matched URLs.
+2. Site-specific files (in `src/sites/`) define blocking functions in global scope before `content.js` runs.
 3. `content.js` maps hostnames to blocking functions and config keys, checks `chrome.storage.sync` for whether each site is enabled, then calls the blocking function immediately and repeats it every 1 second via `setInterval` to handle SPA navigation.
 
 ## Selector Verification Scripts
@@ -46,12 +61,13 @@ All scripts use Playwright with `channel: 'chrome'` (requires Chrome installed).
 
 ### Adding a New Site
 
-1. Optionally create `extension/sites/<site>.js` if the blocking logic is complex; otherwise add a function directly in `content.js`.
+1. Optionally create `src/sites/<site>.js` if the blocking logic is complex; otherwise add a function directly in `content.js`.
 2. Add the hostname → function entry to `pageMap` in `content.js`.
 3. Add the hostname → storage key entry to `blockConfigMap` in `content.js`.
 4. Add the storage key + label to the `CONFIGS` array in `options.js`.
-5. Add the URL pattern to `content_scripts.matches` in `manifest.json`.
-6. If you created a new site file, add it to `content_scripts.js` in `manifest.json` (before `content.js`).
+5. Add the URL pattern to `content_scripts.matches` in `manifests/base.json`.
+6. If you created a new site file, add it to `content_scripts.js` in `manifests/base.json` (before `content.js`).
+7. Run `npm run build` and test in both browsers.
 
 ### Per-Site Blocking Strategies
 

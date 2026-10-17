@@ -27,7 +27,7 @@ function generateCheckboxes() {
         checkbox.id = config.id;
 
         const label = document.createElement('label');
-        label.innerHTML = config.label;
+        label.textContent = config.label;
         label.setAttribute('for', config.id);
 
         container.appendChild(checkbox);

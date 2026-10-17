@@ -1,26 +1,28 @@
 /**
- * Packages the extension/ directory into a versioned ZIP ready for
- * Chrome Web Store submission.
+ * Builds and packages the extension into versioned ZIPs ready for
+ * Chrome Web Store / Firefox Add-ons (AMO) submission.
  *
- * Usage: npm run package
- * Output: distraction_blocker_v<version>.zip (gitignored)
+ * Usage: npm run package [-- chrome|firefox ...]   (default: all)
+ * Output: dist/distraction_blocker_<browser>_v<version>.zip (gitignored)
  */
 
 import { execSync } from 'child_process';
-import { readFileSync, existsSync, unlinkSync } from 'fs';
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { existsSync, unlinkSync } from 'fs';
+import { resolve } from 'path';
+import { root, BROWSERS, build, manifestFor } from './build.mjs';
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const manifest = JSON.parse(readFileSync(resolve(root, 'extension/manifest.json'), 'utf8'));
-const version = manifest.version;
-const outFile = resolve(root, `distraction_blocker_v${version}.zip`);
+const targets = process.argv.slice(2);
 
-if (existsSync(outFile)) {
-  unlinkSync(outFile);
-  console.log(`Removed existing ${outFile}`);
+for (const browser of targets.length ? targets : BROWSERS) {
+  const outDir = build(browser);
+  const { version } = manifestFor(browser);
+  const outName = `distraction_blocker_${browser}_v${version}.zip`;
+  const outFile = resolve(root, 'dist', outName);
+
+  if (existsSync(outFile)) {
+    unlinkSync(outFile);
+  }
+
+  execSync(`zip -qr "${outFile}" .`, { cwd: outDir, stdio: 'inherit' });
+  console.log(`Packaged: dist/${outName}`);
 }
-
-execSync(`zip -r "${outFile}" .`, { cwd: resolve(root, 'extension'), stdio: 'inherit' });
-
-console.log(`\nPackaged: distraction_blocker_v${version}.zip`);

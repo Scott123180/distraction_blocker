@@ -18,14 +18,13 @@ Each site can be toggled on/off individually from the extension's options page.
 
 ## Installation
 
-### From the Chrome Web Store
-*(link coming soon)*
+### From the Chrome Web Store / Firefox Add-ons
+*(links coming soon)*
 
 ### Manual / Developer Install
-1. Clone this repo
-2. Go to `chrome://extensions/`
-3. Enable **Developer mode**
-4. Click **Load unpacked** and select the `extension/` folder
+1. Clone this repo, then run `npm install` and `npm run build`
+2. **Chrome:** go to `chrome://extensions/`, enable **Developer mode**, click **Load unpacked** and select `dist/chrome/`
+3. **Firefox:** go to `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on…** and select `dist/firefox/manifest.json`
 
 ## Development
 
@@ -35,15 +34,31 @@ Install dev dependencies (requires Node.js):
 npm install
 ```
 
-### Packaging for the Chrome Web Store
+### Project layout
 
-Bump the `version` field in `extension/manifest.json`, then run:
+- `src/` — extension source shared by all browsers
+- `manifests/` — `base.json` holds the shared manifest; `chrome.json` and `firefox.json` hold browser-specific overrides
+- `dist/` — build output (gitignored)
+
+### Building
 
 ```bash
-npm run package
+npm run build            # both browsers → dist/chrome/ and dist/firefox/
+npm run build:chrome     # or just one
+npm run build:firefox
 ```
 
-This produces `distraction_blocker_v<version>.zip` in the project root, ready for upload.
+Re-run the build after changing anything in `src/` or `manifests/`, then reload the extension.
+
+### Packaging for the Chrome Web Store / Firefox Add-ons
+
+Bump the `version` field in `manifests/base.json`, then run:
+
+```bash
+npm run package          # or package:chrome / package:firefox
+```
+
+This produces `dist/distraction_blocker_<browser>_v<version>.zip`, ready for upload.
 
 ### Checking selectors
 
